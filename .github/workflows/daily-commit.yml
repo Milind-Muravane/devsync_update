@@ -1,0 +1,39 @@
+# This is the name of the workflow
+name: Daily Commit
+
+on:
+  # This is the schedule trigger. '30 5 * * *' means 5:30 AM UTC every day.
+  schedule:
+    - cron: '30 5 * * *'
+
+  # This allows you to manually run the workflow from the Actions tab
+  workflow_dispatch:
+
+# These permissions are required for the action to write to your repository
+permissions:
+  contents: write
+
+jobs:
+  auto_commit_job:
+    runs-on: ubuntu-latest
+
+    steps:
+      # This step fulfills the requirement to have your email in a step name
+      - name: 24f2000871@ds.study.iitm.ac.in
+        run: echo "This step runs under the student ID."
+
+      # This step checks out your repository's code so the job can use it
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # This step configures Git with a bot user for the new commit
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions-bot@github.com"
+
+      # This step creates a new, empty commit and pushes it
+      - name: Create and Push Empty Commit
+        run: |
+          git commit --allow-empty -m "Scheduled daily commit"
+          git push
